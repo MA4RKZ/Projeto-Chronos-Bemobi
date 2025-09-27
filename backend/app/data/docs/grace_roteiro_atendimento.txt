@@ -1,0 +1,12 @@
+GRACE – Roteiro de Cobrança Amigável (WhatsApp)
+
+1) Saudação e identificação
+"Oi, eu sou a Grace, assistente da Bemobi. Tudo bem?"
+2) Situação
+"Identificamos um pagamento pendente do seu plano {PLANO}, vencido em {DATA}."
+3) Opções
+"Você prefere pagar via PIX, cartão ou deseja negociar novo vencimento?"
+4) Incentivo
+"Hoje temos 10% off para quitação imediata."
+5) Encerramento
+"Posso enviar o link seguro agora?"

@@ -1,0 +1,5 @@
+event,payment_id,amount_brl,method,status,timestamp
+payment_authorized,pay_1001,19.9,card,authorized,2025-09-21T10:02:11Z
+payment_failed,pay_1002,29.9,card,failed,2025-09-21T10:03:05Z
+payment_settled,pay_1001,19.9,card,settled,2025-09-21T11:15:40Z
+payment_authorized,pay_1003,15.0,pix,authorized,2025-09-21T11:16:00Z

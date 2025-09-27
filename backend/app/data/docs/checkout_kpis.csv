@@ -1,0 +1,5 @@
+date,method,starts,authorizations,settlements,conv_authorization_pct,conv_settlement_pct,median_auth_time_s
+2025-09-19,card,9800,8200,7900,83.67,80.61,3.2
+2025-09-19,pix,5400,5250,5200,97.22,96.3,18.6
+2025-09-20,card,10020,8530,8125,85.12,81.05,3.0
+2025-09-20,pix,5600,5480,5425,97.86,96.88,17.9

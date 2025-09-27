@@ -1,0 +1,7 @@
+step,offset,channel,action,incentive
+D0,0h,gateway,retry_same_acquirer,
+D0_retry,6h,gateway,retry_alt_acquirer,
+D1,24h,whatsapp,grace_reminder,
+D3,72h,email+whatsapp,coupon,10%
+D7,168h,system,suspend_benefits,
+D10,240h,system,auto_cancel,reversible_15d

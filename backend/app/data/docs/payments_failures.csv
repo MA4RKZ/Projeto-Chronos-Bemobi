@@ -1,0 +1,5 @@
+date,method,acquirer,attempts,failures,failure_rate_pct,top_reason
+2025-09-20,card,AcquirerA,5240,382,7.29,Do Not Honor
+2025-09-20,pix,PixProviderX,3120,84,2.69,Expired QR
+2025-09-21,card,AcquirerB,4980,455,9.13,Insufficient Funds
+2025-09-21,pix,PixProviderX,3295,71,2.15,Network Timeout

@@ -1,0 +1,30 @@
+{
+  "local": {
+    "enabled": true,
+    "path": "app/data/docs"
+  },
+  "urls": {
+    "enabled": false,
+    "list": [
+      "https://www.example.com"
+    ]
+  },
+  "notion": {
+    "enabled": false,
+    "integration_token": "",
+    "database_id": ""
+  },
+  "gdrive": {
+    "enabled": false,
+    "folder_id": "",
+    "service_account_json": ""
+  },
+  "m365": {
+    "enabled": false,
+    "site_id": "",
+    "drive_id": "",
+    "client_id": "",
+    "tenant_id": "",
+    "client_secret": ""
+  }
+}

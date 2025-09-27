@@ -1,0 +1,8 @@
+Estrategia de Dunning (Recorrência)
+
+- D0 (falha): 1ª tentativa imediata (mesmo gateway).
+- D0+6h: 2ª tentativa (adquirente alternativo).
+- D1: WhatsApp Grace (lembrete + link Smart Checkout).
+- D3: E-mail + WhatsApp (cupom 10%).
+- D7: Suspender benefícios; última tentativa.
+- D10: Cancelamento automático (reversível por 15 dias).
