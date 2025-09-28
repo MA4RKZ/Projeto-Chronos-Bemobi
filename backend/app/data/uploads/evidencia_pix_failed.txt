@@ -1,0 +1,7 @@
+Caso: PIX – erro de autorização
+Passos:
+1) Abre checkout
+2) Seleciona PIX
+3) Gera QR
+4) Retorno com falha
+Esperado: status=payment_failed

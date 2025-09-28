@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 
 interface SidebarProps {
@@ -19,7 +19,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       )}
       
       {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full w-80 bg-gradient-to-b from-orange-500 to-orange-600 transform transition-transform duration-300 ease-in-out z-50 ${
+      <div className={`fixed left-0 top-0 h-full w-80 bg-gradient-to-b from-blue-500 to-blue-600 transform transition-transform duration-300 ease-in-out z-50 ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="p-6">
@@ -32,7 +32,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <div>
               <h2 className="text-white font-bold text-lg">Chronos</h2>
-              <p className="text-orange-100 text-sm">Bemobi Agent</p>
+              <p className="text-blue-100 text-sm">Bemobi Agent</p>
             </div>
           </div>
 
@@ -58,6 +58,29 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
               Admin
+            </Link>
+
+            {/* === Novos itens: QA === */}
+            <Link 
+              href="/qa/upload"
+              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-colors"
+              onClick={onClose}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              QA Upload
+            </Link>
+
+            <Link 
+              href="/qa/reports"
+              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-colors"
+              onClick={onClose}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6M7 8h10M5 4h14a2 2 0 012 2v14l-4-2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/>
+              </svg>
+              QA Relatórios
             </Link>
           </nav>
         </div>

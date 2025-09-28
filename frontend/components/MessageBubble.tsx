@@ -7,10 +7,12 @@ export default function MessageBubble({ role, text }: { role: 'user' | 'assistan
       {/* Avatar */}
       <div className="flex-shrink-0">
         {role === 'assistant' ? (
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
-            <div className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-            </div>
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg">
+            <img 
+              src="/chronos_chat_symbol.png" 
+              alt="Chronos" 
+              className="w-10 h-10 rounded-full"
+            />
           </div>
         ) : (
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center shadow-lg">
@@ -26,7 +28,7 @@ export default function MessageBubble({ role, text }: { role: 'user' | 'assistan
         <div className={`inline-block px-6 py-4 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg ${
           role === 'assistant' 
             ? 'bg-white border border-gray-200' 
-            : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+            : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
         }`}>
           <div className={`whitespace-pre-wrap leading-relaxed ${
             role === 'assistant' ? 'text-gray-800' : 'text-white'

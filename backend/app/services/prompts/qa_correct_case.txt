@@ -1,0 +1,19 @@
+Com base na análise, gere uma versão CORRIGIDA do caso de teste (markdown), usando este formato:
+
+# {case_title} — Revisado
+## Objetivo
+...
+## Pré-condições
+...
+## Passos
+1.
+2.
+## Evidências obrigatórias
+- ...
+## Resultado esperado
+...
+
+Contexto/Políticas:
+{context}
+Sugestões a aplicar:
+{recommendations}

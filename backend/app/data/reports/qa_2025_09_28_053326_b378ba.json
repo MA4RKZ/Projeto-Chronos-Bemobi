@@ -1,0 +1,15 @@
+{
+  "id": "qa_2025_09_28_053326_b378ba",
+  "title": "Análise - PIX - Erro ",
+  "inputs": {
+    "case_title": "PIX - Erro ",
+    "evidences": [
+      "app/data/uploads\\evidencia_pix_failed.txt"
+    ]
+  },
+  "extracted": {
+    "text": "Caso: PIX – erro de autorização\nPassos:\n1) Abre checkout\n2) Seleciona PIX\n3) Gera QR\n4) Retorno com falha\nEsperado: status=payment_failed"
+  },
+  "llm_raw": "```json\n{\n  \"title\": \"PIX - Erro\",\n  \"evidences\": {\n    \"text\": \"Caso: PIX – erro de autorização\\nPassos:\\n1) Abre checkout\\n2) Seleciona PIX\\n3) Gera QR\\n4) Retorno com falha\\nEsperado: status=payment_failed\"\n  },\n  \"criteria_evaluation\": [\n    {\n      \"criteria\": \"msg de erro\",\n      \"result\": \"FAIL\",\n      \"reason\": \"Não há detalhes sobre a mensagem de erro retornada.\"\n    },\n    {\n      \"criteria\": \"retry_policy\",\n      \"result\": \"PASS\",\n      \"reason\": \"O caso não indica que houve um retry, mas isso pode ser verificado no sistema.\"\n    },\n    {\n      \"criteria\": \"idempotencia\",\n      \"result\": \"FAIL\",\n      \"reason\": \"Não há evidências de que a requisição foi tratada como idempotente.\"\n    }\n  ],\n  \"suggestions_for_improvement\": [\n    \"Implementar um mecanismo para registrar e validar a idempotência no sistema.\",\n    \"Capturar detalhes da mensagem de erro retornada pelo PIX para melhor diagnóstico.\"\n  ],\n  \"additional_cases_suggested\": [\n    {\n      \"title\": \"PIX - Erro de Autorização com Retorno\",\n      \"description\": \"Verificar se o sistema registra a autorização falha corretamente e se o status é atualizado conforme esperado.\",\n      \"steps\": [\n        \"Abre checkout\",\n        \"Seleciona PIX\",\n        \"Gera QR\",\n        \"Retorno com falha\",\n        \"Confirma que o status é payment_failed\"\n      ]\n    },\n    {\n      \"title\": \"PIX - Erro de Autorização com Retry\",\n      \"description\": \"Testar a política de retry para ver se o sistema tenta novamente a autorização após um tempo.\",\n      \"steps\": [\n        \"Abre checkout\",\n        \"Seleciona PIX\",\n        \"Gera QR\",\n        \"Retorno com falha\",\n        \"Esperar um intervalo definido (ex: 5 minutos)\",\n        \"Tentar novamente o pagamento\",\n        \"Verificar se a autorização é bem-sucedida\"\n      ]\n    }\n  ]\n}\n```",
+  "created_at": "2025-09-28T05:33:26.849714"
+}

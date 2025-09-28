@@ -1,0 +1,15 @@
+{
+  "id": "qa_2025_09_28_053704_8c0ac7",
+  "title": "Análise - PIX - Retry",
+  "inputs": {
+    "case_title": "PIX - Retry",
+    "evidences": [
+      "app/data/uploads\\evidencia_pix_retry.txt"
+    ]
+  },
+  "extracted": {
+    "text": "Caso: PIX – retry\nPassos:\n1) Gera QR\n2) Não confirma no primeiro ciclo\n3) Nova tentativa\nEsperado: status=settled após retry\n"
+  },
+  "llm_raw": "```json\n{\n  \"title\": \"PIX - Retry\",\n  \"evaluation\": {\n    \"criteria\": [\n      {\n        \"name\": \"msg de erro\",\n        \"result\": \"FAIL\",\n        \"reason\": \"Não há evidência de uma mensagem de erro no log ou texto fornecido.\"\n      },\n      {\n        \"name\": \"retry_policy\",\n        \"result\": \"PASS\",\n        \"reason\": \"O processo de retry foi documentado, indicando que a tentativa foi realizada após o não confirmação do primeiro ciclo.\"\n      },\n      {\n        \"name\": \"idempotencia\",\n        \"result\": \"FAIL\",\n        \"reason\": \"Não há evidência de validação da idempotência no log ou texto fornecido. Recomenda-se validar a assinatura e registrar idempotência no recebedor do webhook.\"\n      }\n    ],\n    \"suggestions\": [\n      {\n        \"description\": \"Incluir uma mensagem de erro detalhada em caso de falha na confirmação do PIX.\",\n        \"actionable\": true\n      },\n      {\n        \"description\": \"Implementar a validação da assinatura e registro idempotência no sistema para garantir que as requisições sejam processadas apenas uma vez.\"\n      }\n    ],\n    \"additional_cases\": [\n      {\n        \"title\": \"PIX - Retry com falha\",\n        \"description\": \"Caso: PIX – retry com falha\\nPassos:\\n1) Gera QR\\n2) Não confirma no primeiro ciclo\\n3) Nova tentativa\\n4) Falha na segunda tentativa\\nEsperado: status=failed após retry\"\n      },\n      {\n        \"title\": \"PIX - Retry com sucesso\",\n        \"description\": \"Caso: PIX – retry com sucesso\\nPassos:\\n1) Gera QR\\n2) Não confirma no primeiro ciclo\\n3) Nova tentativa\\n4) Confirmação bem-sucedida na segunda tentativa\\nEsperado: status=settled após retry\"\n      }\n    ]\n  }\n}\n```",
+  "created_at": "2025-09-28T05:37:04.569553"
+}

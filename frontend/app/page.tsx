@@ -2,7 +2,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
 import MessageBubble from '../components/MessageBubble'
-import InputBar from '../components/InputBar'
+import InputBar from "../components/InputBar";
 import Sidebar from '../components/Sidebar'
 import { askChronos, rebuildIndex } from '../lib/api'
 
@@ -10,7 +10,7 @@ type Msg = { role: 'user' | 'assistant', text: string }
 
 export default function HomePage() {
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: 'assistant', text: 'Oi, eu sou o Chronos. Coloque arquivos em /backend/app/data/docs e clique em "Reindexar" para eu aprender. Como posso ajudar?' }
+    { role: 'assistant', text: 'Oi, eu sou o Chronos. Coloque arquivos em /backend/app/app/data/docs e clique em "Reindexar" para eu aprender. Como posso ajudar?' }
   ])
   const [loading, setLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -55,7 +55,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
@@ -75,10 +75,12 @@ export default function HomePage() {
 
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg float-animation">
-                <div className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                </div>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg float-animation">
+                <img 
+                  src="/chronos_chat_symbol.png" 
+                  alt="Chronos Logo" 
+                  className="w-8 h-8 rounded-full"
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-xl font-bold text-gray-800">Chronos</h1>
@@ -88,7 +90,7 @@ export default function HomePage() {
 
             {/* Status Indicator */}
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${loading ? 'bg-orange-500 animate-pulse' : 'bg-green-500'}`}></div>
+              <div className={`w-2 h-2 rounded-full ${loading ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
               <span className="text-sm text-gray-600 hidden sm:inline">
                 {loading ? 'Processando...' : 'Online'}
               </span>
@@ -102,10 +104,12 @@ export default function HomePage() {
         {/* Welcome Card */}
         {msgs.length === 1 && (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8 text-center">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-xl float-animation">
-              <div className="w-12 h-12 rounded-full border-3 border-white flex items-center justify-center">
-                <div className="w-4 h-4 bg-white rounded-full"></div>
-              </div>
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-xl float-animation">
+              <img 
+                src="/chronos_chat_symbol.png" 
+                alt="Chronos Logo" 
+                className="w-16 h-16 rounded-full"
+              />
             </div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Bem-vindo ao Chronos</h2>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
@@ -114,19 +118,19 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Respostas precisas
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 Processamento rápido
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
                 Dados seguros
@@ -143,18 +147,20 @@ export default function HomePage() {
             {/* Loading indicator */}
             {loading && (
               <div className="my-6 flex items-start gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
-                  <div className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center">
-                    <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                  </div>
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+                  <img 
+                    src="/chronos_chat_symbol.png" 
+                    alt="Chronos Logo" 
+                    className="w-10 h-10 rounded-full animate-pulse"
+                  />
                 </div>
                 <div className="flex-1">
                   <div className="inline-block px-6 py-4 bg-white border border-gray-200 rounded-2xl shadow-md">
                     <div className="flex items-center gap-2">
                       <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                       </div>
                       <span className="text-gray-500 text-sm">Chronos está pensando...</span>
                     </div>
@@ -174,3 +180,4 @@ export default function HomePage() {
     </div>
   )
 }
+

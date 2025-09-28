@@ -1,0 +1,15 @@
+{
+  "id": "qa_2025_09_28_051922_2f5081",
+  "title": "Análise - PIX – fluxo feliz (settled)",
+  "inputs": {
+    "case_title": "PIX – fluxo feliz (settled)",
+    "evidences": [
+      "app/data/uploads\\evidencia1.txt.txt"
+    ]
+  },
+  "extracted": {
+    "text": "Caso: pagamento PIX – fluxo feliz\nPassos:\n1) Abre checkout\n2) Seleciona PIX\n3) Gera QR\n4) Retorno de sucesso\nEsperado: status=settled, sem falha\n"
+  },
+  "llm_raw": "```json\n{\n    \"title\": \"PIX – fluxo feliz (settled)\",\n    \"evaluation\": {\n        \"criteria\": [\n            {\n                \"name\": \"msg de erro\",\n                \"result\": \"FAIL\",\n                \"reason\": \"Não há menção a qualquer mensagem de erro na evidência.\"\n            },\n            {\n                \"name\": \"retry_policy\",\n                \"result\": \"PASS\",\n                \"reason\": \"O fluxo feliz não requer uma política de retry, pois o pagamento foi bem-sucedido no primeiro tentativa.\"\n            },\n            {\n                \"name\": \"idempotencia\",\n                \"result\": \"FAIL\",\n                \"reason\": \"Não há menção à validação da idempotência na evidência. Recomenda-se validar a assinatura e registrar idempotência no recebedor do webhook.\"\n            }\n        ]\n    },\n    \"suggestions\": [\n        {\n            \"description\": \"Incluir uma verificação de mensagem de erro para cobertura completa.\",\n            \"actionable\": true\n        },\n        {\n            \"description\": \"Validar a assinatura e registrar idempotência no recebedor do webhook conforme recomendado.\",\n            \"actionable\": true\n        }\n    ],\n    \"additional_cases\": [\n        {\n            \"title\": \"PIX – fluxo com erro\",\n            \"description\": \"Teste o cenário onde o PIX é gerado, mas a transação falha devido a problemas no cartão ou saldo insuficiente.\",\n            \"expected_result\": \"status=payment_failed\"\n        },\n        {\n            \"title\": \"PIX – fluxo com retry\",\n            \"description\": \"Simule um cenário onde o PIX é gerado e não é confirmado imediatamente, mas a transação é tentada novamente.\",\n            \"expected_result\": \"status=settled após retry\"\n        }\n    ]\n}\n```",
+  "created_at": "2025-09-28T05:19:22.726106"
+}

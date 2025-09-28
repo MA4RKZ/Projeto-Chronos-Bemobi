@@ -1,0 +1,17 @@
+version: 1
+areas:
+  - id: "pix"
+    name: "PIX"
+    required_cases:
+      - id: "pix_success"
+        title: "PIX - sucesso"
+        must_include: ["comprovante", "tempo_total", "hash_txid"]
+      - id: "pix_timeout"
+        title: "PIX - timeout"
+        must_include: ["mensagem_erro", "retry_policy", "log_http"]
+  - id: "debit_recurring"
+    name: "Débito Recorrente"
+    required_cases:
+      - id: "debit_retry"
+        title: "Tentativa de reprocessamento"
+        must_include: ["agendamento", "log_gateway", "policy_idempotencia"]

@@ -1,0 +1,17 @@
+{
+  "id": "qa_2025_09_28_060437_ad9290",
+  "title": "Análise - PIX – Timeout na confirmação",
+  "area": "pix",
+  "inputs": {
+    "case_title": "PIX – Timeout na confirmação",
+    "evidences": [
+      "app/data/uploads/evidencia_pix_timeout.txt.txt"
+    ]
+  },
+  "extracted": {
+    "text": "Caso: pagamento PIX – timeout na confirmação\n\nPassos:\n1) Abre checkout\n2) Seleciona método PIX\n3) Gera QR Code (txid=TX123-ABC)\n4) Cliente paga via app do banco\n5) Aguarda retorno do status no checkout por 60s\n\nLogs (aplicação):\n[12:01:04.112] checkout:create txid=TX123-ABC amount=49.90\n[12:01:05.902] qr:generated txid=TX123-ABC qrcode=0002012658...\n[12:01:39.070] poll:status txid=TX123-ABC -> PENDING\n[12:02:05.444] error: PIX confirmation timeout (408) txid=TX123-ABC\n\nLogs (webhook):\n-- nenhum webhook recebido dentro do período do teste --\n\nResultado esperado:\n- status=settled em até 30s OU\n- fallback de retry (nova consulta ao gateway) + registro de tentativa\n\nResultado observado:\n- timeout após 60s, sem confirmação final\n- sem evidência de webhook payment_settled\n- sem registro de retry ou política de reprocessamento\n\nNotas:\n- Não há menção explícita à validação de idempotência\n- Não foi verificado cabeçalho de assinatura do webhook\n"
+  },
+  "llm_raw": "```json\n{\n  \"title\": \"PIX – Timeout na confirmação\",\n  \"evaluation\": {\n    \"criteria\": [\n      {\n        \"name\": \"msg de erro\",\n        \"result\": \"OK\",\n        \"reason\": \"O log registra um erro com a mensagem 'timeout after 60s, without final confirmation' (tempo limite após 60 segundos, sem confirmação final).\"\n      },\n      {\n        \"name\": \"retry_policy\",\n        \"result\": \"NOK\",\n        \"reason\": \"Não há registro de uma política de reintentos ou tentativas adicionais para o pagamento. O log indica um timeout após 60s sem qualquer evidência de retry.\"\n      },\n      {\n        \"name\": \"idempotencia\",\n        \"result\": \"NOK\",\n        \"reason\": \"Não há menção explícita à validação de idempotência, nem no registro de logs ou nas recomendações. Isso pode levar a processos duplicados.\"\n      }\n    ]\n  },\n  \"suggestions\": [\n    {\n      \"description\": \"Implementar uma política de reintentos (retry policy) para o pagamento PIX.\",\n      \"details\": \"Adicionar lógica que permita novas consultas ao gateway após um timeout, com intervalos definidos.\"\n    },\n    {\n      \"description\": \"Validar a idempotência no recebedor do webhook.\",\n      \"details\": \"Implementar mecanismos para garantir que cada webhook seja processado apenas uma vez, mesmo em caso de duplicação ou perda de mensagens.\"\n    }\n  ],\n  \"additional_cases\": [\n    {\n      \"title\": \"PIX – Timeout com retry\",\n      \"description\": \"Teste a implementação da política de reintentos para ver se o pagamento é concluído após um timeout.\",\n      \"steps\": [\n        \"Abre checkout\",\n        \"Seleciona método PIX\",\n        \"Gera QR Code (txid=TX123-ABC)\",\n        \"Cliente paga via app do banco\",\n        \"Aguarda retorno do status no checkout por 60s\"\n      ],\n      \"expected_result\": \"status=settled em até 30s ou fallback de retry + registro de tentativa.\"\n    },\n    {\n      \"title\": \"PIX – Idempotência com webhook\",\n      \"description\": \"Teste a validação de id",
+  "created_at": "2025-09-28T06:04:37.333274",
+  "report_markdown_path": "app/data/reports/qa_2025_09_28_060437_ad9290.md"
+}

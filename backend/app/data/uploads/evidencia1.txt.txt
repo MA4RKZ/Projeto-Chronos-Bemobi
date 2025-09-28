@@ -1,0 +1,7 @@
+Caso: pagamento PIX – fluxo feliz
+Passos:
+1) Abre checkout
+2) Seleciona PIX
+3) Gera QR
+4) Retorno de sucesso
+Esperado: status=settled, sem falha

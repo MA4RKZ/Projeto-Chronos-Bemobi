@@ -1,0 +1,30 @@
+Caso: pagamento PIX – timeout na confirmação
+
+Passos:
+1) Abre checkout
+2) Seleciona método PIX
+3) Gera QR Code (txid=TX123-ABC)
+4) Cliente paga via app do banco
+5) Aguarda retorno do status no checkout por 60s
+
+Logs (aplicação):
+[12:01:04.112] checkout:create txid=TX123-ABC amount=49.90
+[12:01:05.902] qr:generated txid=TX123-ABC qrcode=0002012658...
+[12:01:39.070] poll:status txid=TX123-ABC -> PENDING
+[12:02:05.444] error: PIX confirmation timeout (408) txid=TX123-ABC
+
+Logs (webhook):
+-- nenhum webhook recebido dentro do período do teste --
+
+Resultado esperado:
+- status=settled em até 30s OU
+- fallback de retry (nova consulta ao gateway) + registro de tentativa
+
+Resultado observado:
+- timeout após 60s, sem confirmação final
+- sem evidência de webhook payment_settled
+- sem registro de retry ou política de reprocessamento
+
+Notas:
+- Não há menção explícita à validação de idempotência
+- Não foi verificado cabeçalho de assinatura do webhook

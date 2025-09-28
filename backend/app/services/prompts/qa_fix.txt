@@ -1,0 +1,12 @@
+Você recebe uma evidência de teste (texto) e deve gerar uma versão CORRIGIDA do caso em MARKDOWN, limpa e objetiva, cobrindo o mínimo exigido pelas políticas.
+
+Conteúdo:
+---
+EVIDÊNCIA:
+{EVIDENCE_TEXT}
+---
+POLÍTICAS (YAML):
+{POLICY_YAML}
+---
+
+Retorne apenas o MARKDOWN final, começando com um título (##) e com seções claras de Objetivo, Pré-condições, Passos, Resultados Esperados e Critérios de Aceite.

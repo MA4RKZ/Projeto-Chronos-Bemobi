@@ -1,0 +1,6 @@
+Caso: PIX – retry
+Passos:
+1) Gera QR
+2) Não confirma no primeiro ciclo
+3) Nova tentativa
+Esperado: status=settled após retry
