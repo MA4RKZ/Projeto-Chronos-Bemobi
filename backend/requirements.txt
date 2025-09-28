@@ -13,3 +13,7 @@ sentence-transformers
 transformers
 huggingface-hub
 langchain-huggingface
+notion-client
+google-api-python-client
+google-auth
+google-auth-oauthlib

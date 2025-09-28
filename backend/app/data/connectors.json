@@ -1,18 +1,18 @@
 {
   "local": {
-    "enabled": true,
+    "enabled": false,
     "path": "app/data/docs"
   },
   "urls": {
-    "enabled": true,
+    "enabled": false,
     "list": [
       "https://www.example.com"
     ]
   },
   "notion": {
-    "enabled": false,
-    "integration_token":"ntn_Lye968774819GU0p1o4lWeMZyo4CCwT8vK5mHqmaok94xo",
-    "database_id": "27c005c63ba98050bdc0ca6375fd46ee"
+    "enabled": true,
+    "integration_token": "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",
+    "database_id": "27ce57af38a480f4be5ac0a1fbd35504"
   },
   "gdrive": {
     "enabled": false,

@@ -5,9 +5,9 @@ export default function MessageBubble({ role, text }: { role: 'user' | 'assistan
   return (
     <div className={`my-6 flex items-start gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
       {/* Avatar */}
-      <div className={`flex-shrink-0 ${role === 'user' ? 'ml-4' : 'mr-4'}`}>
+      <div className="flex-shrink-0">
         {role === 'assistant' ? (
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg pulse-glow">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
             <div className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center">
               <div className="w-3 h-3 bg-white rounded-full"></div>
             </div>
@@ -25,7 +25,7 @@ export default function MessageBubble({ role, text }: { role: 'user' | 'assistan
       <div className={`flex-1 max-w-3xl ${role === 'user' ? 'text-right' : ''}`}>
         <div className={`inline-block px-6 py-4 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg ${
           role === 'assistant' 
-            ? 'bg-white border border-gray-200 chronos-card' 
+            ? 'bg-white border border-gray-200' 
             : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
         }`}>
           <div className={`whitespace-pre-wrap leading-relaxed ${

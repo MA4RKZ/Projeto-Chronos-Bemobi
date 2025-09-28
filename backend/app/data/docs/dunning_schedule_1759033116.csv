@@ -1,0 +1,7 @@
+step,offset_days,channel,action,message_template
+D0 - Payment failed,0,email,Notify failure with link to update payment method,"Olá, sua tentativa de pagamento falhou. Atualize sua forma de pagamento para evitar suspensão."
+D+3 - Retry charge,3,system,Automatic retry of last payment method,Nova tentativa automática de cobrança realizada.
+D+5 - Reminder,5,sms,Send reminder to update payment method,Lembrete: atualize sua forma de pagamento para evitar interrupções.
+D+10 - Second retry,10,system,Second automatic retry,Segunda tentativa automática de cobrança realizada.
+D+12 - Final notice,12,email,Send final notice before suspension,Aviso final: sua assinatura será suspensa em 3 dias caso o pagamento não seja regularizado.
+D+15 - Suspend access,15,ops,Suspend account access,Acesso suspenso até a regularização do pagamento.

@@ -101,7 +101,7 @@ export default function HomePage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Card */}
         {msgs.length === 1 && (
-          <div className="chronos-card p-8 mb-8 text-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8 text-center">
             <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-xl float-animation">
               <div className="w-12 h-12 rounded-full border-3 border-white flex items-center justify-center">
                 <div className="w-4 h-4 bg-white rounded-full"></div>
@@ -136,7 +136,7 @@ export default function HomePage() {
         )}
 
         {/* Chat Area */}
-        <div className="chronos-card min-h-[60vh] max-h-[70vh] overflow-hidden flex flex-col">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 min-h-[60vh] max-h-[70vh] overflow-hidden flex flex-col">
           <div className="flex-1 overflow-y-auto p-6">
             {msgs.map((m, i) => <MessageBubble key={i} role={m.role} text={m.text} />)}
             
