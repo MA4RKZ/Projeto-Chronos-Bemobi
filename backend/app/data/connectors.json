@@ -4,20 +4,20 @@
     "path": "app/data/docs"
   },
   "urls": {
-    "enabled": false,
+    "enabled": true,
     "list": [
       "https://www.example.com"
     ]
   },
   "notion": {
     "enabled": false,
-    "integration_token": "",
-    "database_id": ""
+    "integration_token":"ntn_Lye968774819GU0p1o4lWeMZyo4CCwT8vK5mHqmaok94xo",
+    "database_id": "27c005c63ba98050bdc0ca6375fd46ee"
   },
   "gdrive": {
     "enabled": false,
-    "folder_id": "",
-    "service_account_json": ""
+    "folder_id": "1SkoZ-8IPNNb7ZjVeiJwY6D9dYq0S9V8L",
+    "service_account_json": "app/creds/cronos-473503-951471361c37.json"
   },
   "m365": {
     "enabled": false,

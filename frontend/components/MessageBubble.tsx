@@ -3,8 +3,46 @@ import React from 'react'
 
 export default function MessageBubble({ role, text }: { role: 'user' | 'assistant', text: string }) {
   return (
-    <div className={`bubble ${role} ${role === 'user' ? 'user' : 'assistant'} my-2`}>
-      {text}
+    <div className={`my-6 flex items-start gap-4 ${role === 'user' ? 'flex-row-reverse' : ''}`}>
+      {/* Avatar */}
+      <div className={`flex-shrink-0 ${role === 'user' ? 'ml-4' : 'mr-4'}`}>
+        {role === 'assistant' ? (
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg pulse-glow">
+            <div className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center">
+              <div className="w-3 h-3 bg-white rounded-full"></div>
+            </div>
+          </div>
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center shadow-lg">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      {/* Message Content */}
+      <div className={`flex-1 max-w-3xl ${role === 'user' ? 'text-right' : ''}`}>
+        <div className={`inline-block px-6 py-4 rounded-2xl shadow-md transition-all duration-300 hover:shadow-lg ${
+          role === 'assistant' 
+            ? 'bg-white border border-gray-200 chronos-card' 
+            : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white'
+        }`}>
+          <div className={`whitespace-pre-wrap leading-relaxed ${
+            role === 'assistant' ? 'text-gray-800' : 'text-white'
+          }`}>
+            {text}
+          </div>
+        </div>
+        
+        {/* Timestamp */}
+        <div className={`mt-2 text-xs text-gray-500 ${role === 'user' ? 'text-right' : 'text-left'}`}>
+          {new Date().toLocaleTimeString('pt-BR', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          })}
+        </div>
+      </div>
     </div>
   )
 }

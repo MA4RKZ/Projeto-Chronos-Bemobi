@@ -4,6 +4,7 @@ from langchain_core.documents import Document
 from langchain_community.document_loaders import (
     DirectoryLoader, TextLoader, PyPDFLoader, CSVLoader, WebBaseLoader
 )
+from langchain_community.document_loaders import Docx2txtLoader, UnstructuredExcelLoader
 
 CONFIG_DIR = "app/data"
 CONFIG_PATH = os.path.join(CONFIG_DIR, "connectors.json")
@@ -61,24 +62,44 @@ def update_connector(name: str, patch: Dict[str, Any]) -> Dict[str, Any]:
 def _iter_local_docs(path: str) -> List[Document]:
     if not path or not os.path.exists(path):
         return []
+
     docs: List[Document] = []
 
-    for pattern, loader_cls in [
-        ("**/*.md", TextLoader),
-        ("**/*.txt", TextLoader),
-        ("**/*.pdf", PyPDFLoader),
-        ("**/*.csv", CSVLoader),
-    ]:
-        loader = DirectoryLoader(path, glob=pattern, loader_cls=loader_cls, show_progress=True, use_multithreading=True)
+    # (pattern, loader_cls, loader_kwargs)
+    patterns = [
+        ("**/*.md",   TextLoader, {"encoding": "utf-8", "autodetect_encoding": True}),
+        ("**/*.txt",  TextLoader, {"encoding": "utf-8", "autodetect_encoding": True}),
+        ("**/*.pdf",  PyPDFLoader, {}),
+        ("**/*.csv",  CSVLoader, {}),
+        # habilite os dois abaixo se instalar as dependências
+        ("**/*.docx", Docx2txtLoader, {}),
+        ("**/*.xlsx", UnstructuredExcelLoader, {"mode": "elements"}),  # requer 'unstructured'
+    ]
+
+    for pattern, loader_cls, loader_kwargs in patterns:
         try:
+            loader = DirectoryLoader(
+                path,
+                glob=pattern,
+                loader_cls=loader_cls,
+                loader_kwargs=loader_kwargs,     # <-- aqui entram 'encoding'/'autodetect'
+                show_progress=True,
+                use_multithreading=True
+            )
             docs.extend(loader.load())
-        except Exception:
+        except Exception as e:
+            # Se preferir, logue o erro:
+            # print(f"[LOCAL] Falha ao carregar {pattern}: {e}")
             pass
-    # Normaliza metadados
+
+    # --- Normalização de metadados ---
     for d in docs:
         src = d.metadata.get("source") or d.metadata.get("file_path") or "local"
-        d.metadata["source"] = src.replace("\\", "/")
+        d.metadata["source"] = str(src).replace("\\", "/")
         d.metadata.setdefault("connector", "local")
+        if "page" not in d.metadata and "page_number" in d.metadata:
+            d.metadata["page"] = d.metadata["page_number"]
+
     return docs
 
 def _iter_url_docs(urls: List[str]) -> List[Document]:

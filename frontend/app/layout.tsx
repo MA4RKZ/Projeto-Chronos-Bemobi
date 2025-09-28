@@ -3,7 +3,7 @@ import "../styles/globals.css"
 import React from "react"
 
 export const metadata = {
-  title: "BIA — Bemobi Internal Agent",
+  title: "Chronos — Bemobi Internal Agent",
   description: "RAG para documentos internos",
 }
 

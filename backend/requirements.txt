@@ -12,3 +12,4 @@ python-multipart
 sentence-transformers
 transformers
 huggingface-hub
+langchain-huggingface

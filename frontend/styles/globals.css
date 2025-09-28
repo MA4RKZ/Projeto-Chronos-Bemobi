@@ -2,14 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tema claro/escuro rápido via CSS vars */
+/* Tema Chronos - Inspirado em tempo e ampulheta */
 :root {
-  --bg: #0b0b10;
-  --fg: #f5f6f7;
-  --muted: #9aa4af;
-  --card: #171821;
-  --accent: #6b5cff;
-  --accent-2: #a78bfa;
+  --bg: #F8F9FA; /* Cor de fundo clara */
+  --fg: #2D3748; /* Cor do texto principal */
+  --muted: #718096; /* Cor do texto secundário */
+  --card: #FFFFFF; /* Cor de fundo dos cards/elementos */
+  --accent: #FF6B35; /* Laranja principal (inspirado na ampulheta) */
+  --accent-2: #E53E3E; /* Vermelho secundário */
+  --accent-3: #4299E1; /* Azul complementar */
+  --accent-4: #9F7AEA; /* Roxo para destaque */
+  --border: #E2E8F0; /* Cor das bordas */
+  --shadow: rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
 * { box-sizing: border-box; }
@@ -21,34 +25,104 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-/* bolhas de chat */
-.bubble {
-  @apply px-4 py-3 rounded-2xl whitespace-pre-wrap leading-relaxed;
-}
-.bubble.assistant {
-  background: var(--card);
-}
-.bubble.user {
-  background: rgba(255,255,255,0.07);
+/* Animações personalizadas */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
-/* botões */
-.btn {
-  @apply px-3 py-2 rounded-xl text-sm transition;
-  background: var(--card);
-}
-.btn:hover {
-  filter: brightness(1.08);
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.6); }
 }
 
-/* input */
-.input {
-  @apply flex-1 px-3 py-3 rounded-xl outline-none;
-  background: var(--card);
-  color: var(--fg);
+.float-animation {
+  animation: float 3s ease-in-out infinite;
 }
 
-/* container principal */
-.shell {
-  @apply max-w-3xl mx-auto p-6 space-y-4;
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Gradientes personalizados */
+.gradient-chronos {
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+}
+
+.gradient-time {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-sand {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Componentes customizados */
+.chronos-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.chronos-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow);
+}
+
+.chronos-button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.chronos-button:hover {
+  background: var(--accent-2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.chronos-input {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.chronos-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-2);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .chronos-card {
+    margin: 0.5rem;
+  }
 }

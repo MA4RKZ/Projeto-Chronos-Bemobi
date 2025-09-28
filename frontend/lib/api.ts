@@ -10,10 +10,10 @@ async function jsonFetch(url: string, init?: RequestInit) {
   return res.json();
 }
 
-export async function askBIA(message: string, top_k = 4) {
+export async function askChronos(message: string, top_k = 4) {
   return jsonFetch(`${BACKEND_URL}/api/chat`, {
     method: "POST",
-    body: JSON.stringify({ message, top_k }),
+    body: JSON.stringify({ message, top_k, return_sources: true }), // <= garante fontes
   });
 }
 
@@ -54,4 +54,14 @@ export async function syncAdmin(full = false) {
   })
   if (!r.ok) throw new Error('sync error')
   return r.json()
+}
+
+export async function uploadDocuments(files: File[], reindex = true) {
+  const form = new FormData();
+  files.forEach((f) => form.append("files", f));
+
+  const url = `${BACKEND_URL}/api/upload${reindex ? "?reindex=true" : ""}`;
+  const res = await fetch(url, { method: "POST", body: form });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json(); // { status, saved: [{file, path}], reindexed, vectors }
 }
