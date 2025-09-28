@@ -1,0 +1,41 @@
+{
+  "id": "qa_2025_09_28_110249_ed6dd9",
+  "title": "Análise - Débito Recorrente – primeira cobrança falhou",
+  "area": "debit_recurring",
+  "inputs": {
+    "case_title": "Débito Recorrente – primeira cobrança falhou",
+    "evidences": [
+      "app/data/uploads/evidencia_debito_recorrente_primeira_falha.txt"
+    ]
+  },
+  "extracted": {
+    "text": "Caso: débito recorrente – falha na primeira cobrança (saldo insuficiente)\n\nPlano:\n- Assinatura mensal R$ 29,90\n- Cartão final 1234\n\nPassos:\n1) Criação de assinatura\n2) Agendamento de cobrança D0\n3) Tentativa automática de cobrança\n\nLogs:\n[09:00:10.100] subscription:create id=SUB-555 user=U-2025 plan=Mensal\n[09:00:12.200] charge:attempt subscription=SUB-555 amount=29.90\n[09:00:12.980] charge:failed reason=insufficient_funds code=402\n\nPolítica de dunning:\n- D0: e-mail de lembrete (enviado ✔)\n- D3: SMS (não evidenciado)\n- D7: bloqueio parcial (não evidenciado)\n\nWebhooks:\n[09:00:13.120] webhook: payment_failed subscription=SUB-555 signature=sha256=9F0A...\n\nControles:\n- Validação de assinatura do webhook: OK\n- Idempotência na criação de eventos: sem evidência\n\nResultado esperado:\n- registro de falha + agenda de dunning (D3, D7)\nResultado observado:\n- Apenas e-mail D0 evidenciado; demais etapas ausentes\n"
+  },
+  "llm_raw": "```json\n{\n  \"title\": \"Débito Recorrente – primeira cobrança falhou\",\n  \"evaluation\": {\n    \"criteria\": [\n      {\n        \"name\": \"msg de erro\",\n        \"result\": \"Ausente\",\n        \"reason\": \"Não foi evidenciada nenhuma mensagem de erro durante a tentativa de cobrança.\"\n      },\n      {\n        \"name\": \"retry_policy\",\n        \"result\": \"Ausente\",\n        \"reason\": \"Não há evidência de uma política de retry configurada para lidar com falhas temporárias.\"\n      },\n      {\n        \"name\": \"idempotencia\",\n        \"result\": \"Ausente\",\n        \"reason\": \"Não foi evidenciada nenhuma implementação que garantisse a idempotência das tentativas de cobrança.\"\n      }\n    ]\n  },\n  \"suggestions\": [\n    \"Implementar uma mensagem de erro detalhada para fornecer mais contexto sobre o motivo da falha.\",\n    \"Desenvolver e configurar uma política de retry com intervalos exponenciais ou cíclicos, dependendo do cenário.\",\n    \"Garantir que as tentativas de cobrança sejam idempotentes, evitando processos duplicados.\"\n  ],\n  \"additional_cases\": [\n    {\n      \"title\": \"Débito Recorrente – falha em D3\",\n      \"description\": \"A segunda tentativa de cobrança (D3) deve ser configurada para enviar um SMS de lembrete.\",\n      \"expected_result\": \"SMS enviado com sucesso após a tentativa automática de cobrança.\"\n    },\n    {\n      \"title\": \"Débito Recorrente – falha em D7\",\n      \"description\": \"A quarta tentativa de cobrança (D7) deve bloquear parcialmente o acesso do usuário.\",\n      \"expected_result\": \"Bloqueio parcial do acesso do usuário após a tentativa automática de cobrança.\"\n    },\n    {\n      \"title\": \"Débito Recorrente – falha em D10\",\n      \"description\": \"A sexta tentativa de cobrança (D10) deve realizar uma segunda tentativa de cobrança.\",\n      \"expected_result\": \"Segunda tentativa de cobrança realizada após a tentativa automática de cobrança.\"\n    }\n  ]\n}\n``",
+  "evaluation": {
+    "criteria": [
+      {
+        "name": "msg de erro",
+        "result": "Ausente",
+        "reason": "Não foi evidenciada nenhuma mensagem de erro durante a tentativa de cobrança."
+      },
+      {
+        "name": "retry_policy",
+        "result": "Ausente",
+        "reason": "Não há evidência de uma política de retry configurada para lidar com falhas temporárias."
+      },
+      {
+        "name": "idempotencia",
+        "result": "Ausente",
+        "reason": "Não foi evidenciada nenhuma implementação que garantisse a idempotência das tentativas de cobrança."
+      }
+    ]
+  },
+  "suggestions": [
+    "Implementar uma mensagem de erro detalhada para fornecer mais contexto sobre o motivo da falha.",
+    "Desenvolver e configurar uma política de retry com intervalos exponenciais ou cíclicos, dependendo do cenário.",
+    "Garantir que as tentativas de cobrança sejam idempotentes, evitando processos duplicados."
+  ],
+  "created_at": "2025-09-28T11:02:49.482828",
+  "report_markdown_path": "app/data/reports/qa_2025_09_28_110249_ed6dd9.md"
+}

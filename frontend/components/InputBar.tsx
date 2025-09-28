@@ -1,15 +1,19 @@
 'use client'
 import React, { useState, useRef } from 'react'
+import { qaAnalyze, qaReportMDUrl } from '../lib/api'
 
 interface InputBarProps {
   onSend: (text: string) => void
   onRebuild: () => void
   loading: boolean
+  /** opcional: usada para empurrar uma mensagem de “sistema/assistant” no chat após upload */
+  onQAResult?: (text: string) => void
 }
 
-export default function InputBar({ onSend, onRebuild, loading }: InputBarProps) {
+export default function InputBar({ onSend, onRebuild, loading, onQAResult }: InputBarProps) {
   const [value, setValue] = useState('')
   const [showActions, setShowActions] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const disabled = loading || !value.trim()
 
@@ -23,11 +27,48 @@ export default function InputBar({ onSend, onRebuild, loading }: InputBarProps) 
     fileInputRef.current?.click()
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files
-    if (files && files.length > 0) {
-      console.log('Arquivos selecionados:', files)
-      alert(`${files.length} arquivo(s) selecionado(s). Funcionalidade de upload será implementada.`)
+    if (!files || files.length === 0) return
+
+    try {
+      setUploading(true)
+
+      // Monta título/área rápidos (você pode depois trocar por um modal)
+      const names = Array.from(files).map(f => f.name).join(', ')
+      const form = new FormData()
+      form.append('case_title', `Upload rápido – ${names}`)
+      // Se quiser setar uma área automática, descomente:
+      // form.append('area', 'pix')
+
+      Array.from(files).forEach(f => form.append('files', f))
+
+      const report = await qaAnalyze(form)
+
+      const mdLink = report?.id ? qaReportMDUrl(report.id) : null
+      const msg = [
+        `✅ **Upload analisado com sucesso!**`,
+        ``,
+        `**Título:** ${report?.title || '(sem título)'}`,
+        `**ID:** ${report?.id}`,
+        `**Área:** ${report?.area || '-'}`,
+        report?.inputs?.evidences?.length
+          ? `**Evidências:**\n${report.inputs.evidences.map(p => `- ${p}`).join('\n')}`
+          : '',
+        mdLink ? `**Baixar MD:** ${mdLink}` : ''
+      ].filter(Boolean).join('\n')
+
+      // Empurra uma mensagem no chat (se o Home passou o callback)
+      onQAResult?.(msg)
+
+      // Limpa input de arquivo para permitir re-selecionar o mesmo arquivo
+      e.target.value = ''
+    } catch (err: any) {
+      const m = `❌ Falha no upload/análise: ${err?.message || err}`
+      onQAResult?.(m)
+      e.target.value = ''
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -57,7 +98,7 @@ export default function InputBar({ onSend, onRebuild, loading }: InputBarProps) 
                     setShowActions(false)
                   }}
                   className="w-full flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-                  disabled={loading}
+                  disabled={loading || uploading}
                 >
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,13 +114,16 @@ export default function InputBar({ onSend, onRebuild, loading }: InputBarProps) 
                     setShowActions(false)
                   }}
                   className="w-full flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                  disabled={uploading}
                 >
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium">Anexar arquivos</span>
+                  <span className="text-sm font-medium">
+                    {uploading ? 'Enviando...' : 'Anexar arquivos'}
+                  </span>
                 </button>
               </div>
             )}
@@ -109,10 +153,10 @@ export default function InputBar({ onSend, onRebuild, loading }: InputBarProps) 
             disabled={disabled} 
             onClick={submit}
           >
-            {loading ? (
+            {(loading || uploading) ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Enviando...
+                {uploading ? 'Enviando...' : 'Enviando...'}
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -133,7 +177,7 @@ export default function InputBar({ onSend, onRebuild, loading }: InputBarProps) 
         multiple
         className="hidden"
         onChange={handleFileChange}
-        accept=".pdf,.doc,.docx,.txt,.md,.csv"
+        accept=".pdf,.doc,.docx,.txt,.md,.csv,.log"
       />
     </div>
   )

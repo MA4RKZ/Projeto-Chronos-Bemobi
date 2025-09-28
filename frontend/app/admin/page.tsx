@@ -1,11 +1,19 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Sidebar from '../../components/Sidebar'
 import { getAdminStats, listConnectors, updateConnector, syncAdmin } from '../../lib/api'
 
+type ConnectorCfg = {
+  enabled?: boolean
+  path?: string          // local
+  list?: string[]        // urls
+  manage_url?: string    // opcional: backend pode enviar um link de gerenciamento
+  [k: string]: any
+}
+
 export default function AdminPage() {
   const [stats, setStats] = useState<any>({})
-  const [conns, setConns] = useState<any>({})
+  const [conns, setConns] = useState<Record<string, ConnectorCfg>>({})
   const [loading, setLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -34,11 +42,73 @@ export default function AdminPage() {
     } finally { setLoading(false) }
   }
 
+  /** Retorna o rótulo e a URL padrão para abrir a “console” do conector */
+  function getConnectorAction(name: string, cfg: ConnectorCfg) {
+    // Se o backend já manda um manage_url, priorize-o
+    if (cfg?.manage_url) {
+      return { label: 'Abrir painel', href: cfg.manage_url }
+    }
+
+    // Fallbacks padrão
+    switch (name) {
+      case 'notion':
+        return { label: 'Abrir Notion', href: 'https://www.notion.so/' }
+      case 'gdrive':
+        return { label: 'Abrir Drive', href: 'https://drive.google.com/' }
+      case 'm365':
+        return { label: 'Abrir M365', href: 'https://portal.office.com/' }
+      case 'urls':
+        // Se tiver lista, abre a primeira URL
+        if (cfg?.list && cfg.list.length > 0) {
+          return { label: 'Abrir URL', href: cfg.list[0] }
+        }
+        return { label: 'Abrir ajuda', href: 'https://www.example.com' }
+      case 'local':
+        // Para “local” não temos como abrir pasta local via navegador;
+        // mostramos uma dica de caminho: app/data/docs
+        return { label: 'Ajuda', href: 'https://github.com' }
+      default:
+        return { label: 'Abrir', href: '#' }
+    }
+  }
+
+  /** Ícone por conector (apenas visual) */
+  function renderIcon(name: string, enabled?: boolean) {
+    const cls = enabled ? 'text-green-600' : 'text-gray-500'
+    if (name === 'local')
+      return (
+        <svg className={`w-6 h-6 ${cls}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 1v6m8-6v6" />
+        </svg>
+      )
+    return (
+      <svg className={`w-6 h-6 ${cls}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+    )
+  }
+
+  /** Texto “sub” por conector */
+  function renderSubText(name: string, cfg: ConnectorCfg) {
+    if (name === 'local') return `Caminho: ${cfg.path || 'app/data/docs'}`
+    if (name === 'urls')  return `URLs: ${(cfg.list || []).join(', ') || '—'}`
+    if (name === 'notion') return 'Configurar credenciais...'
+    if (name === 'gdrive') return 'Configurar credenciais...'
+    if (name === 'm365')  return 'Configurar credenciais...'
+    return ''
+  }
+
+  const hasAnyEnabled = useMemo(
+    () => Object.values(conns).some((cfg) => cfg?.enabled),
+    [conns]
+  )
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
+
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,8 +138,8 @@ export default function AdminPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
-              <button 
-                onClick={() => doSync(false)} 
+              <button
+                onClick={() => doSync(false)}
                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 flex items-center gap-2"
                 disabled={loading}
               >
@@ -78,8 +148,8 @@ export default function AdminPage() {
                 </svg>
                 <span className="hidden sm:inline">Sincronizar</span>
               </button>
-              <button 
-                onClick={() => doSync(true)} 
+              <button
+                onClick={() => doSync(true)}
                 className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 flex items-center gap-2"
                 disabled={loading}
               >
@@ -111,7 +181,7 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="chronos-card p-6 bg-gradient-to-br from-green-50 to-green-100">
             <div className="flex items-center justify-between">
               <div>
@@ -126,7 +196,7 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="chronos-card p-6 bg-gradient-to-br from-purple-50 to-purple-100">
             <div className="flex items-center justify-between">
               <div>
@@ -147,67 +217,78 @@ export default function AdminPage() {
         <section className="chronos-card p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">Dados em falta</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Conexões de dados</h2>
               <p className="text-gray-600 mt-1">Gerencie as fontes de dados do sistema</p>
             </div>
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-              Object.values(conns).some((cfg: any) => cfg.enabled) 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-red-100 text-red-800'
-            }`}>
-              <div className={`w-2 h-2 rounded-full ${
-                Object.values(conns).some((cfg: any) => cfg.enabled) ? 'bg-green-500' : 'bg-red-500'
-              }`}></div>
-              {Object.values(conns).some((cfg: any) => cfg.enabled) ? 'Conectado' : 'Desconectado'}
+            <div
+              className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                hasAnyEnabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}
+            >
+              <div className={`w-2 h-2 rounded-full ${hasAnyEnabled ? 'bg-green-500' : 'bg-red-500'}`} />
+              {hasAnyEnabled ? 'Conectado' : 'Desconectado'}
             </div>
           </div>
-          
+
           <div className="space-y-4">
-            {Object.entries(conns).map(([name, cfg]: any) => (
-              <div key={name} className="flex items-center justify-between p-6 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-md transition-all duration-200">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                    cfg.enabled ? 'bg-green-100' : 'bg-gray-200'
-                  }`}>
-                    {name === 'local' ? (
-                      <svg className={`w-6 h-6 ${cfg.enabled ? 'text-green-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 1v6m8-6v6" />
-                      </svg>
-                    ) : (
-                      <svg className={`w-6 h-6 ${cfg.enabled ? 'text-green-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                      </svg>
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-800 capitalize">{name}</div>
-                    <div className="text-sm text-gray-600 truncate max-w-md">
-                      {name === 'local' ? `Caminho: ${cfg.path}` :
-                       name === 'urls'  ? `URLs: ${(cfg.list||[]).join(', ')}` : 'Configurar credenciais...'}
+            {Object.entries(conns).map(([name, cfg]) => {
+              const action = getConnectorAction(name, cfg || {})
+              return (
+                <div
+                  key={name}
+                  className="flex items-center justify-between p-6 bg-gray-50 rounded-2xl border border-gray-200 hover:shadow-md transition-all duration-200"
+                >
+                  {/* Esquerda: ícone + textos */}
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${cfg?.enabled ? 'bg-green-100' : 'bg-gray-200'}`}>
+                      {renderIcon(name, cfg?.enabled)}
                     </div>
+                    <div>
+                      <div className="font-semibold text-gray-800 capitalize">{name}</div>
+                      <div className="text-sm text-gray-600 truncate max-w-md">
+                        {renderSubText(name, cfg || {})}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Direita: botões de ação + toggle */}
+                  <div className="flex items-center gap-3">
+                    {/* Botão de ação (abrir painel do conector) */}
+                    <a
+                      href={action.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    >
+                      {action.label}
+                    </a>
+
+                    {/* Toggle */}
+                    <label className="inline-flex items-center gap-3 cursor-pointer">
+                      <span className={`text-sm font-medium ${cfg?.enabled ? 'text-green-600' : 'text-gray-500'}`}>
+                        {cfg?.enabled ? 'Selecionado' : 'Não selecionado'}
+                      </span>
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={!!cfg?.enabled}
+                          onChange={(e) => toggle(name, e.target.checked)}
+                          disabled={loading}
+                          className="sr-only"
+                        />
+                        <div className={`w-12 h-6 rounded-full transition-colors ${cfg?.enabled ? 'bg-green-500' : 'bg-gray-300'}`}>
+                          <div
+                            className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
+                              cfg?.enabled ? 'translate-x-6' : 'translate-x-0.5'
+                            } mt-0.5`}
+                          />
+                        </div>
+                      </div>
+                    </label>
                   </div>
                 </div>
-                
-                <label className="inline-flex items-center gap-3 cursor-pointer">
-                  <span className={`text-sm font-medium ${cfg.enabled ? 'text-green-600' : 'text-gray-500'}`}>
-                    {cfg.enabled ? 'Selecionado' : 'Não selecionado'}
-                  </span>
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={!!cfg.enabled}
-                      onChange={e => toggle(name, e.target.checked)}
-                      disabled={loading}
-                      className="sr-only"
-                    />
-                    <div className={`w-12 h-6 rounded-full transition-colors ${cfg.enabled ? 'bg-green-500' : 'bg-gray-300'}`}>
-                      <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${cfg.enabled ? 'translate-x-6' : 'translate-x-0.5'} mt-0.5`}></div>
-                    </div>
-                  </div>
-                </label>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
 
@@ -222,9 +303,9 @@ export default function AdminPage() {
             <div>
               <h3 className="font-semibold text-blue-800 mb-2">Dica de configuração</h3>
               <p className="text-blue-700 text-sm leading-relaxed">
-                Edite o arquivo <code className="bg-blue-200 px-2 py-1 rounded text-xs">backend/app/data/connectors.json</code> para incluir 
-                integrações com Notion, Google Drive ou Microsoft 365. Após a configuração, ative o conector desejado e clique em "Sincronizar" 
-                para importar os dados.
+                Edite o arquivo <code className="bg-blue-200 px-2 py-1 rounded text-xs">backend/app/data/connectors.json</code> para incluir
+                integrações com Notion, Google Drive ou Microsoft 365. Você pode opcionalmente informar <code>manage_url</code> para
+                cada fonte e os botões acima abrirão diretamente o painel correto. Depois ative o conector e clique em “Sincronizar”.
               </p>
             </div>
           </div>

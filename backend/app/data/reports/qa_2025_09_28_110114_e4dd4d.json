@@ -1,0 +1,39 @@
+{
+  "id": "qa_2025_09_28_110114_e4dd4d",
+  "title": "Análise - Upload rápido – retry_matrix_billing.xlsx",
+  "area": null,
+  "inputs": {
+    "case_title": "Upload rápido – retry_matrix_billing.xlsx",
+    "evidences": [
+      "app/data/uploads/retry_matrix_billing.xlsx"
+    ]
+  },
+  "extracted": {
+    "text": "[no_ocr_supported_for]app/data/uploads/retry_matrix_billing.xlsx"
+  },
+  "llm_raw": "```json\n{\n  \"title\": \"Upload rápido – retry_matrix_billing.xlsx\",\n  \"evaluation\": [\n    {\n      \"criteria\": \"msg de erro\",\n      \"result\": \"N/A\",\n      \"reason\": \"Não há evidências claras de mensagens de erro no arquivo Excel.\"\n    },\n    {\n      \"criteria\": \"retry_policy\",\n      \"result\": \"N/A\",\n      \"reason\": \"Não há evidências claras de uma política de retry definida no arquivo Excel.\"\n    },\n    {\n      \"criteria\": \"idempotencia\",\n      \"result\": \"N/A\",\n      \"reason\": \"Não há evidências claras de que a operação seja idempotente ou como isso é implementado no arquivo Excel.\"\n    }\n  ],\n  \"suggestions\": [\n    \"Inclua uma coluna para mensagens de erro em caso de falha na upload.\",\n    \"Defina uma política de retry com base nos parâmetros fornecidos (exponencial, até 5 tentativas).\",\n    \"Verifique se a operação é idempotente e adicione essa informação ao arquivo Excel.\"\n  ],\n  \"additional_cases\": [\n    {\n      \"title\": \"Análise da Política de Retry\",\n      \"description\": \"Avaliar como a política de retry está implementada no sistema.\",\n      \"criteria\": [\n        \"Verificar se o sistema respeita os limites de retries (5 tentativas).\",\n        \"Confirmar que o sistema utiliza um algoritmo exponencial para calcular os intervalos entre retries.\"\n      ]\n    },\n    {\n      \"title\": \"Implementação da Idempotência\",\n      \"description\": \"Verificar se a operação de upload é idempotente.\",\n      \"criteria\": [\n        \"Confirmar que o mesmo upload realizado múltiplas vezes não resulta em duplicações ou alterações indesejadas no sistema.\"\n      ]\n    }\n  ]\n}\n```\n\n### Explicação dos Critérios e Sugestões\n\n1. **msg de erro**: O arquivo Excel não contém informações sobre mensagens de erro, o que é crucial para diagnóstico e resolução de problemas.\n2. **retry_policy**: Não há evidências claras de como a política de retry está implementada no sistema.\n3. **idempotencia**: A idempotência é importante para garantir que operações sejam seguras e consistent",
+  "evaluation": [
+    {
+      "criteria": "msg de erro",
+      "result": "N/A",
+      "reason": "Não há evidências claras de mensagens de erro no arquivo Excel."
+    },
+    {
+      "criteria": "retry_policy",
+      "result": "N/A",
+      "reason": "Não há evidências claras de uma política de retry definida no arquivo Excel."
+    },
+    {
+      "criteria": "idempotencia",
+      "result": "N/A",
+      "reason": "Não há evidências claras de que a operação seja idempotente ou como isso é implementado no arquivo Excel."
+    }
+  ],
+  "suggestions": [
+    "Inclua uma coluna para mensagens de erro em caso de falha na upload.",
+    "Defina uma política de retry com base nos parâmetros fornecidos (exponencial, até 5 tentativas).",
+    "Verifique se a operação é idempotente e adicione essa informação ao arquivo Excel."
+  ],
+  "created_at": "2025-09-28T11:01:14.654589",
+  "report_markdown_path": "app/data/reports/qa_2025_09_28_110114_e4dd4d.md"
+}

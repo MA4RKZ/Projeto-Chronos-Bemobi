@@ -1,0 +1,32 @@
+Caso: débito recorrente – falha na primeira cobrança (saldo insuficiente)
+
+Plano:
+- Assinatura mensal R$ 29,90
+- Cartão final 1234
+
+Passos:
+1) Criação de assinatura
+2) Agendamento de cobrança D0
+3) Tentativa automática de cobrança
+
+Logs:
+[09:00:10.100] subscription:create id=SUB-555 user=U-2025 plan=Mensal
+[09:00:12.200] charge:attempt subscription=SUB-555 amount=29.90
+[09:00:12.980] charge:failed reason=insufficient_funds code=402
+
+Política de dunning:
+- D0: e-mail de lembrete (enviado ✔)
+- D3: SMS (não evidenciado)
+- D7: bloqueio parcial (não evidenciado)
+
+Webhooks:
+[09:00:13.120] webhook: payment_failed subscription=SUB-555 signature=sha256=9F0A...
+
+Controles:
+- Validação de assinatura do webhook: OK
+- Idempotência na criação de eventos: sem evidência
+
+Resultado esperado:
+- registro de falha + agenda de dunning (D3, D7)
+Resultado observado:
+- Apenas e-mail D0 evidenciado; demais etapas ausentes

@@ -1,0 +1,19 @@
+{
+  "id": "qa_2025_09_28_110612_1793e3",
+  "title": "Análise - Upload rápido – retry_matrix_billing.xlsx",
+  "area": null,
+  "inputs": {
+    "case_title": "Upload rápido – retry_matrix_billing.xlsx",
+    "evidences": [
+      "app/data/uploads/retry_matrix_billing.xlsx"
+    ]
+  },
+  "extracted": {
+    "text": "[no_ocr_supported_for]app/data/uploads/retry_matrix_billing.xlsx"
+  },
+  "llm_raw": "```json\n{\n  \"title\": \"Upload rápido – retry_matrix_billing.xlsx\",\n  \"evaluation\": {\n    \"criteria\": [\n      {\n        \"name\": \"msg de erro\",\n        \"result\": \"N/A\",\n        \"reason\": \"Não há evidências claras sobre a mensagem de erro no arquivo Excel.\"\n      },\n      {\n        \"name\": \"retry_policy\",\n        \"result\": \"N/A\",\n        \"reason\": \"Não há evidências claras sobre a política de retry no arquivo Excel.\"\n      },\n      {\n        \"name\": \"idempotencia\",\n        \"result\": \"N/A\",\n        \"reason\": \"Não há evidências claras sobre a idempotência no arquivo Excel.\"\n      }\n    ]\n  },\n  \"suggestions\": [\n    \"Analisar o conteúdo do arquivo retry_matrix_billing.xlsx para identificar se há informações relacionadas às mensagens de erro, políticas de retry e idempotência.\",\n    \"Se necessário, adicionar essas informações ao arquivo ou criar um novo documento com esses detalhes.\"\n  ],\n  \"additional_cases\": [\n    {\n      \"title\": \"Política de retry para webhooks\",\n      \"description\": \"Verificar se a política de retry definida no endpoint /webhooks/payments é aplicada corretamente no arquivo Excel.\",\n      \"evaluation\": {\n        \"criteria\": [\n          {\n            \"name\": \"retry_policy\",\n            \"result\": \"Aplicado\",\n            \"reason\": \"A política de retry exponencial com até 5 tentativas foi definida.\"\n          }\n        ]\n      },\n      \"suggestions\": [\n        \"Incluir a política de retry no arquivo Excel para garantir consistência entre os sistemas.\"\n      ]\n    },\n    {\n      \"title\": \"Mensagens de erro personalizadas\",\n      \"description\": \"Criar mensagens de erro personalizadas com base nos eventos definidos (payment_authorized, payment_failed, payment_settled).\",\n      \"evaluation\": {\n        \"criteria\": [\n          {\n            \"name\": \"msg de erro\",\n            \"result\": \"N/A\",\n            \"reason\": \"Não há evidências claras sobre mensagens de erro personalizadas.\"\n          }\n        ]\n      },\n      \"suggestions\": [\n        \"Desenvolver mensagens de erro personalizadas para cada evento, seguindo o padrão definido no endpoint /webhooks/payments.\"\n      ]\n    },\n    {\n     ",
+  "evaluation": null,
+  "suggestions": null,
+  "created_at": "2025-09-28T11:06:12.711273",
+  "report_markdown_path": "app/data/reports/qa_2025_09_28_110612_1793e3.md"
+}

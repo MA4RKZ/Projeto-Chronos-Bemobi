@@ -1,6 +1,6 @@
 {
   "local": {
-    "enabled": false,
+    "enabled": true,
     "path": "app/data/docs"
   },
   "urls": {
